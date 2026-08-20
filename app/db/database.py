@@ -1,15 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from app.core.config import settings
 
-DATABASE_URL ="mysql+pymysql://root:123456@localhost:3306/campaign_management_db"
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(settings.DATABASE_URL)
 
-SessionLocal = sessionmaker(
-    autoflush=False,
-    autocommit=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, 
+                            autoflush=False, 
+                            bind=engine)
 
 Base = declarative_base()
 
