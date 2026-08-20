@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
-
-from sqlalchemy import (Column,Integer,String,Text,Enum,DateTime,ForeignKey)
-
+from datetime import datetime
+from sqlalchemy import Column,Integer,String,Text,Enum,DateTime,ForeignKey
+from sqlalchemy.orm import relationship
 from app.db.database import Base
+
 class CampaignTask(Base):
     __tablename__ = "campaign_tasks"
 
@@ -23,3 +23,9 @@ class CampaignTask(Base):
     due_date = Column(DateTime,nullable=True)
 
     created_at = Column(DateTime,default=datetime.utcnow,nullable=False)
+
+    # Campaign 1 - N CampaignTask
+    campaign = relationship("Campaign",back_populates="tasks")
+
+    # User 1 - N CampaignTask
+    assignee = relationship("User",back_populates="assigned_tasks")

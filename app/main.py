@@ -1,75 +1,31 @@
 from fastapi import FastAPI, Request
-from app.db.database import engine, Base
-from app.models import user, campaign, campaign_member, campaign_task
-from app.core.exceptions import (
-    NotFoundException,
-    BadRequestException,
-    ForbiddenException,
-    not_found_exception_handler,
-    bad_request_exception_handler,
-    forbidden_exception_handler
-)
 
-from app.core.response import success_response
+from app.db.database import engine, Base
+from app.models import user, campaign, campaign_task
+from app.core.exceptions import setup_exception_handlers
+
+
+Base.metadata.create_all(bind=engine)
+
+
 app = FastAPI(
     title="Manager Campaign"
 )
 
-Base.metadata.create_all(bind=engine)
 
-app.add_exception_handler(
-    NotFoundException,
-    not_found_exception_handler
-)
-
-app.add_exception_handler(
-    BadRequestException,
-    bad_request_exception_handler
-)
-
-app.add_exception_handler(
-    ForbiddenException,
-    forbidden_exception_handler
-)
-
+setup_exception_handlers(app)
 
 
 @app.get("/")
-def root(request: Request):
-    return success_response(
-        request=request,
-        message="API đang được kết nối",
-        data=None
-    )
+def root():
+    return {
+        "message": "API đang chạy"
+    }
 
 
 @app.get("/health")
 def health_check(request: Request):
-    return success_response(
-        request=request,
-        message="Hệ thống đang hoạt động",
-        data={
-            "status": "ok"
-        }
-    )
-
-
-@app.get("/test/404")
-def test_not_found():
-    raise NotFoundException(
-        "Không tìm thấy chiến dịch"
-    )
-
-
-@app.get("/test/400")
-def test_bad_request():
-    raise BadRequestException(
-        "Dữ liệu yêu cầu không hợp lệ"
-    )
-
-
-@app.get("/test/403")
-def test_forbidden():
-    raise ForbiddenException(
-        "Bạn không có quyền thực hiện thao tác này"
-    )
+    return {
+        "message": "Hệ thống đang hoạt động bình thường!",
+        "request": str(request.url)
+    }
