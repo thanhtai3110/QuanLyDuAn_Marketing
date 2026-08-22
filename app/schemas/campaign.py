@@ -4,14 +4,14 @@ from pydantic import BaseModel, ConfigDict
 
 class CampaignBase(BaseModel):
     name: str
-    description: str | None = None
+    description: str 
 
 class CampaignCreate(CampaignBase):
     pass
 
 class CampaignUpdate(BaseModel):
-    name: str | None = None
-    description: str | None = None
+    name: str 
+    description: str 
 
 class CampaignResponse(CampaignBase):
     id: int

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column,Integer,String,Text,DateTime,ForeignKey,Enum
 from sqlalchemy.orm import relationship
 from app.db.database import Base
@@ -14,13 +14,13 @@ class Campaign(Base):
 
     owner_id = Column(Integer,ForeignKey("users.id"),nullable=False)
 
-    created_at = Column(DateTime,default=datetime.utcnow,nullable=False)
+    created_at = Column(DateTime,default=lambda: datetime.now(timezone.utc),nullable=False)
 
     # User 1 - N Campaign
     owner = relationship("User",back_populates="owned_campaigns")
 
     # Campaign N - N User
-    # thông qua CampaignMember
+    
     members = relationship("CampaignMember",back_populates="campaign")
 
     # Campaign 1 - N CampaignTask
@@ -35,7 +35,7 @@ class CampaignMember(Base):
 
     role = Column(Enum("OWNER", "MEMBER"),nullable=False)
 
-    joined_at = Column(DateTime,default=datetime.utcnow,nullable=False)
+    joined_at = Column(DateTime,default=lambda: datetime.now(timezone.utc),nullable=False)
 
     campaign = relationship("Campaign",back_populates="members")
 

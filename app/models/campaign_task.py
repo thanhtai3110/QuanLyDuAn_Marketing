@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column,Integer,String,Text,Enum,DateTime,ForeignKey
 from sqlalchemy.orm import relationship
 from app.db.database import Base
@@ -22,7 +22,7 @@ class CampaignTask(Base):
 
     due_date = Column(DateTime,nullable=True)
 
-    created_at = Column(DateTime,default=datetime.utcnow,nullable=False)
+    created_at = Column(DateTime,default=lambda: datetime.now(timezone.utc),nullable=False)
 
     # Campaign 1 - N CampaignTask
     campaign = relationship("Campaign",back_populates="tasks")

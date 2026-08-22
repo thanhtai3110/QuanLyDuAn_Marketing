@@ -2,15 +2,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.core.config import settings
 
-
+# kết nối trưc tiếp đến db
 engine = create_engine(settings.DATABASE_URL)
 
+#tạo phiên làm việc
 SessionLocal = sessionmaker(autocommit=False, 
                             autoflush=False, 
                             bind=engine)
 
 Base = declarative_base()
 
+#đóng mở phiên làm việc
 def get_db():
     db = SessionLocal()
     try:
