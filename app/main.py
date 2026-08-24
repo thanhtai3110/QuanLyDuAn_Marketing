@@ -3,13 +3,14 @@ from app.db.database import engine, Base
 from app.models import user, campaign, campaign_task
 from app.core.exceptions import setup_exception_handlers
 from app.router import users, auth
-
+from app.router import campaign
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Manager Campaign"
 )
 setup_exception_handlers(app)
+app.include_router(campaign.router)
 app.include_router(auth.router)
 app.include_router(users.router)
 @app.get("/")

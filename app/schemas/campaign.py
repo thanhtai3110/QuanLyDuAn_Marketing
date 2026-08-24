@@ -1,47 +1,57 @@
+from pydantic import BaseModel, Field
+from typing import Optional
 from datetime import datetime
 from enum import Enum
-from pydantic import BaseModel, ConfigDict
 
+# ==========================
+# ĐỊNH NGHĨA ENUM CHUẨN DB
+# ==========================
+class MemberRole(str, Enum):
+    OWNER = "OWNER"
+    MEMBER = "MEMBER"
+
+
+# ==========================
+# SCHEMA CHO CHIẾN DỊCH (CAMPAIGN)
+# ==========================
 class CampaignBase(BaseModel):
-    name: str
-    description: str 
+    name: str = Field(..., min_length=1, max_length=255)
+    description: Optional[str] = None
+
 
 class CampaignCreate(CampaignBase):
-    pass
+    pass  # Dùng luôn các trường của Base để tạo
+
 
 class CampaignUpdate(BaseModel):
-    name: str 
-    description: str 
+    name: Optional[str] = None
+    description: Optional[str] = None
+
 
 class CampaignResponse(CampaignBase):
     id: int
     owner_id: int
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
 
 
-class CampaignMemberRole(str, Enum):
-    OWNER = "OWNER"
-    MEMBER = "MEMBER"
+# ==========================
+# SCHEMA CHO THÀNH VIÊN (MEMBER)
+# ==========================
 
-
-class CampaignMemberBase(BaseModel):
-    role: CampaignMemberRole
-
-
-class CampaignMemberCreate(CampaignMemberBase):
-    campaign_id: int
+# Khuôn hứng ID khi Owner muốn thêm thành viên mới
+class CampaignMemberAdd(BaseModel):
     user_id: int
 
 
-class CampaignMemberUpdate(BaseModel):
-    role: CampaignMemberRole
-
-
-class CampaignMemberResponse(CampaignMemberBase):
+# Khuôn trả về thông tin thành viên
+class CampaignMemberResponse(BaseModel):
     campaign_id: int
     user_id: int
+    role: MemberRole
     joined_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True

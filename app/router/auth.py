@@ -2,9 +2,6 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.user import UserCreate, UserLogin, UserResponse
-
-# Import tầng service vào để xài. 
-# Lưu ý: Sửa lại app.services.user thành tên file service của bạn nếu bạn đặt tên khác nhé!
 from app.services import user as user_service 
 from app.core.security import create_access_token
 
@@ -15,22 +12,13 @@ router = APIRouter(
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    """
-    API Đăng ký tài khoản mới:
-    - Nhận dữ liệu đầu vào (user_data) từ Request.
-    - Gọi service để xử lý logic lưu DB.
-    - Trả về thông tin an toàn (UserResponse).
-    """
+
     new_user = user_service.create_user(db=db, user_data=user_data)
     return new_user
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 def login(user_data: UserLogin, db: Session = Depends(get_db)):
-    """
-    API Đăng nhập:
-    - Xác thực thông tin.
-    - Trả về mã Token (vé thông hành).
-    """
+
     user = user_service.authenticate_user(db=db, user_data=user_data)
 
     # Lấy quyền của user. Vì Database của bạn lưu thẳng role vào bảng User nên gọi trực tiếp
