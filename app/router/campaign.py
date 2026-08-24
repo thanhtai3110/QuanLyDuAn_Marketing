@@ -121,9 +121,8 @@ def get_campaign_detail(
     return campaign
 
 
-# ==========================================
 # API 1: CẬP NHẬT CHIẾN DỊCH (Chỉ OWNER)
-# ==========================================
+
 @router.put("/{campaign_id}", response_model=CampaignResponse)
 def update_campaign(
     campaign_id: int,
@@ -167,10 +166,8 @@ def update_campaign(
 
     return campaign
 
-
-# ==========================================
 # API 2: XÓA CHIẾN DỊCH (Chỉ OWNER)
-# ==========================================
+
 @router.delete("/{campaign_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_campaign(
     campaign_id: int,
@@ -213,10 +210,8 @@ def delete_campaign(
     db.commit()
     return
 
-
-# ==========================================
 # API 3: THÊM THÀNH VIÊN (Chỉ OWNER)
-# ==========================================
+
 @router.post("/{campaign_id}/members", status_code=status.HTTP_201_CREATED)
 def add_member(
     campaign_id: int,
@@ -275,10 +270,8 @@ def add_member(
         "message": "Đã thêm thành viên thành công!"
     }
 
-
-# ==========================================
 # API 4: XÓA THÀNH VIÊN (Chỉ OWNER)
-# ==========================================
+
 @router.delete("/{campaign_id}/members/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_member(
     campaign_id: int,
@@ -331,10 +324,8 @@ def remove_member(
 
     return
 
-
-# ==========================================
 # API 5: XEM DANH SÁCH THÀNH VIÊN
-# ==========================================
+
 @router.get(
     "/{campaign_id}/members",
     response_model=List[CampaignMemberResponse]
@@ -357,7 +348,6 @@ def get_campaign_members(
             detail="Bạn không có quyền! Chỉ thành viên mới được xem."
         )
 
-    # Lấy danh sách member
     members = db.query(CampaignMember).filter(
         CampaignMember.campaign_id == campaign_id
     ).all()

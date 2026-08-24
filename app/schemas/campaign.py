@@ -3,17 +3,15 @@ from typing import Optional
 from datetime import datetime
 from enum import Enum
 
-# ==========================
 # ĐỊNH NGHĨA ENUM CHUẨN DB
-# ==========================
+
 class MemberRole(str, Enum):
     OWNER = "OWNER"
     MEMBER = "MEMBER"
 
 
-# ==========================
 # SCHEMA CHO CHIẾN DỊCH (CAMPAIGN)
-# ==========================
+
 class CampaignBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
